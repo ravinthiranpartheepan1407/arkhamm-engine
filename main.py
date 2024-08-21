@@ -28,7 +28,7 @@ st.markdown(
 
 # Sidebar menu
 st.sidebar.title("Arkhamm Menu")
-app_mode = st.sidebar.selectbox("Choose the app mode", ["Personalized Diet Plan", "Arkhamm Fitness LLM"])
+app_mode = st.sidebar.selectbox("Choose the app mode", ["Personalized Diet Plan", "Arkhamm Fitness LLM", "For Pets"])
 
 # Function to allow self-signed HTTPS certificates
 def allowSelfSignedHttps(allowed):
@@ -222,6 +222,57 @@ def process_diet_results():
     else:
         st.error("API key missing. Please provide your API key in the Arkhamm Fitness LLM section.")
 
+
+def dog_activity_screen():
+    st.header("Tell us about your dog's activities")
+
+    st.session_state.dog_age = st.number_input("Enter your dog's age (in years):", min_value=0.1, max_value=20.0, step=0.1)
+    st.session_state.dog_breed = st.text_input("Enter your dog's breed:")
+
+    st.session_state.morning_activity = st.slider("Morning activity (minutes):", min_value=0, max_value=180, value=30)
+    st.session_state.afternoon_activity = st.slider("Afternoon activity (minutes):", min_value=0, max_value=180, value=30)
+    st.session_state.evening_activity = st.slider("Evening activity (minutes):", min_value=0, max_value=180, value=30)
+    st.session_state.night_activity = st.slider("Night activity (minutes):", min_value=0, max_value=180, value=30)
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.button("Back", on_click=go_to_screen, args=(st.session_state.current_screen - 1,))
+    with col2:
+        st.button("Next", on_click=go_to_screen, args=(st.session_state.current_screen + 1,))
+
+def process_dog_food_results():
+    st.header("Processing your dog's personalized diet plan...")
+
+    activity_data = {
+        "dog_age": st.session_state.dog_age,
+        "dog_breed": st.session_state.dog_breed,
+        "morning": st.session_state.morning_activity,
+        "afternoon": st.session_state.afternoon_activity,
+        "evening": st.session_state.evening_activity,
+        "night": st.session_state.night_activity,
+    }
+
+    prompt = f"""
+    Based on the following dog activities, recommend the Indian food for the dog next food intake cycle:
+    Dog Age: {activity_data['dog_age']}
+    Dog Breed: {activity_data['dog_breed']}
+    Morning: {activity_data['morning']} minutes
+    Afternoon: {activity_data['afternoon']} minutes
+    Evening: {activity_data['evening']} minutes
+    Night: {activity_data['night']} minutes
+    """
+
+    api_key = st.text_input("Enter your API key:", type="password")
+
+    if api_key:
+        with st.spinner("Getting your personalized diet plan..."):
+            response = get_response(prompt, api_key)  # Make sure get_response function is defined properly
+            st.success("Here is your personalized diet plan!")
+            st.write(response)
+    else:
+        st.error("API key missing. Please provide your API key in the Arkhamm Fitness LLM section.")
+
+
 # Function to handle screen navigation
 def go_to_screen(screen_number):
     st.session_state.current_screen = screen_number
@@ -229,5 +280,12 @@ def go_to_screen(screen_number):
 # Main app logic
 if app_mode == "Arkhamm Fitness LLM":
     arkhamm_fitness_llm()
+elif app_mode == "For Pets":
+    if "current_screen" not in st.session_state:
+        st.session_state.current_screen = 1
+    if st.session_state.current_screen == 1:
+        dog_activity_screen()
+    elif st.session_state.current_screen == 2:
+        process_dog_food_results()
 else:
     personalized_diet_plan()
