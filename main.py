@@ -114,6 +114,8 @@ def personalized_diet_plan():
     elif st.session_state.current_screen == 5:
         diet_screen5()
     elif st.session_state.current_screen == 6:
+        diet_screen6()
+    elif st.session_state.current_screen == 7:
         process_diet_results()
 
 def diet_screen1():
@@ -192,7 +194,7 @@ def diet_screen6():
         "Indian", "Lithuanian", "Greek"
     ]
 
-    st.session_state.dish_type = st.radio("Choose your fitness goal", goals)
+    st.session_state.dish_types = st.radio("Choose your fitness goal", goals)
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -213,7 +215,7 @@ def process_diet_results():
         "goal_duration": st.session_state.goal_duration,
         "exercise_frequency": st.session_state.exercise_frequency,
         "working_hours": st.session_state.working_hours,
-        "dish_type": st.session_state.dish_type
+        "dish_types": st.session_state.dish_types
     }
 
     # Generate the prompt
@@ -228,7 +230,7 @@ def process_diet_results():
     - Goal duration: {answers['goal_duration']} weeks
     - Exercise frequency: {answers['exercise_frequency']}
     - Working hours: {answers['working_hours']} hours/day
-    - Dish Type: {answers['dish_type']}
+    - Dish Type: {answers['dish_types']}
     """
 
     api_key = st.text_input("Enter your API key:", type="password")
