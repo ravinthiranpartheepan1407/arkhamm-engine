@@ -183,6 +183,23 @@ def diet_screen5():
     with col2:
         st.button("Next", on_click=go_to_screen, args=(st.session_state.current_screen + 1,))
 
+
+def diet_screen6():
+    st.header("What is your Dish Type?")
+    st.text("Select your dish type.")
+
+    goals = [
+        "Indian", "Lithuanian", "Greek"
+    ]
+
+    st.session_state.dish_type = st.radio("Choose your fitness goal", goals)
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.button("Back", on_click=go_to_screen, args=(st.session_state.current_screen - 1,))
+    with col2:
+        st.button("Next", on_click=go_to_screen, args=(st.session_state.current_screen + 1,))
+
 def process_diet_results():
     st.header("Processing your personalized diet plan...")
 
@@ -195,7 +212,8 @@ def process_diet_results():
         "fitness_goal": st.session_state.fitness_goal,
         "goal_duration": st.session_state.goal_duration,
         "exercise_frequency": st.session_state.exercise_frequency,
-        "working_hours": st.session_state.working_hours
+        "working_hours": st.session_state.working_hours,
+        "dish_type": st.session_state.dish_type
     }
 
     # Generate the prompt
@@ -210,6 +228,7 @@ def process_diet_results():
     - Goal duration: {answers['goal_duration']} weeks
     - Exercise frequency: {answers['exercise_frequency']}
     - Working hours: {answers['working_hours']} hours/day
+    - Dish Type" {answers['dish_type']}
     """
 
     api_key = st.text_input("Enter your API key:", type="password")
@@ -253,7 +272,7 @@ def process_dog_food_results():
     }
 
     prompt = f"""
-    Based on the following dog activities, recommend the Indian food for the dog next food intake cycle:
+    Based on the following dog activities, recommend the dog food for my dog next food intake cycle:
     Dog Age: {activity_data['dog_age']}
     Dog Breed: {activity_data['dog_breed']}
     Morning: {activity_data['morning']} minutes
