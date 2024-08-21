@@ -15,12 +15,12 @@ st.markdown(
         background-color: 'black';
         color: 'white';
     }
-    [data-testid="stHeader"] {
-        display: none;
-    }
-    [data-testid="stToolbar"] {
-        display: none;
-    }
+    # [data-testid="stHeader"] {
+    #     display: none;
+    # }
+    # [data-testid="stToolbar"] {
+    #     display: none;
+    # }
     </style>
     """,
     unsafe_allow_html=True,
