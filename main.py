@@ -228,7 +228,7 @@ def process_diet_results():
     - Goal duration: {answers['goal_duration']} weeks
     - Exercise frequency: {answers['exercise_frequency']}
     - Working hours: {answers['working_hours']} hours/day
-    - Dish Type" {answers['dish_type']}
+    - Dish Type: {answers['dish_type']}
     """
 
     api_key = st.text_input("Enter your API key:", type="password")
